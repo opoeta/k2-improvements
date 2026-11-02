@@ -12,7 +12,7 @@
 ; Creality_Print V7.3.0.6157 de proposito: o firmware da K2 recusa arquivos sem
 ; ele (atualize a versao se o Creality Print mudar). Diferencas: o Orca nao tem
 ; multicolor_method -> o ritual de carga do CFS roda sempre (imprimindo pelo CFS);
-; purga inicial com 1 bloco de 90 mm (o original fazia 3x90).
+; purga inicial de 270 mm (3x90, via K2_FLUSH) - o fatiador nao sabe a cor que sobrou no bico.
 ; Requisitos: Processo -> Outros -> "Etiquetar objetos" LIGADO;
 ;             Impressora -> Geral -> "Usar distancias E relativas" LIGADO.
 ; PLACAS NOMEADAS: adicione PLATE=<nome> no fim da linha do START_PRINT.
@@ -46,26 +46,10 @@ M106 P2 S0
 T[initial_no_support_extruder]
 
 ; FLUSH_START
-M106 S30
-G1 F60
-M400
-M104 S[nozzle_temperature_initial_layer]
-G1 E{90 * 0.18} F{filament_max_volumetric_speed[initial_no_support_extruder]/2.4053*60}
-G1 E{90 * 0.02} F60
-G1 E{90 * 0.18} F{filament_max_volumetric_speed[initial_no_support_extruder]/2.4053*60}
-G1 E{90 * 0.02} F60
-G1 E{90 * 0.18} F{filament_max_volumetric_speed[initial_no_support_extruder]/2.4053*60}
-G1 E{90 * 0.02} F60
-G1 E{90 * 0.18} F{filament_max_volumetric_speed[initial_no_support_extruder]/2.4053*60}
-G1 E{90 * 0.02} F60
-G1 E{90 * 0.18} F{filament_max_volumetric_speed[initial_no_support_extruder]/2.4053*60}
-G1 E{90 * 0.02} F60
-
-M400
-M106 S255
-G4 P5000
-M106 S0
-G1 E-[retract_length_toolchange[initial_no_support_extruder]] F1800
+; Purga inicial LONGA (a cor que sobrou no bico do print anterior e desconhecida pro
+; fatiador): 270 mm = 3 blocos de 90, como o original da Creality. K2_FLUSH (start_print.cfg)
+; faz fan + pausa + limpeza no batedor entre blocos. Mais/menos: mude o TOTAL.
+K2_FLUSH TOTAL=270 OLD_F={filament_max_volumetric_speed[initial_no_support_extruder]/2.4053*60} NEW_F={filament_max_volumetric_speed[initial_no_support_extruder]/2.4053*60} T_NEW=[nozzle_temperature_initial_layer] T_HIGH=[nozzle_temperature_range_high[initial_no_support_extruder]] RET=[retract_length_toolchange[initial_no_support_extruder]]
 ; FLUSH_END
 
 ; WIPE
