@@ -70,6 +70,9 @@ run_step nivela_web         features/nivela_web/install.sh
 run_step camera_fix         features/camera-fix/install.sh
 # seguranca do probe stock: anti-arrasto do bico no _HOME_Z/SAFE_MOVE_Z
 run_step prtouch_safe_xy    features/prtouch_safe_xy/install.sh
+# BED_MESH_SCALE: escala o mesh ativo (o PR Touch exagera a curvatura da mesa);
+# o START_PRINT so chama se mesh_scale < 1.0 estiver no k2_vars.cfg
+run_step mesh_scale         features/mesh_scale/install.sh
 # START_PRINT cancelavel (so ativa se o firmware expor a API de cancel >=1.1.5.5)
 run_step fast_stop          features/start_print_fast_stop/install.sh
 # backend do "Parar Homing" (patch fail-open no webhooks.py; nao-fatal)

@@ -22,6 +22,12 @@ ALVOS = {"bed_mesh": 600, "z_tilt": 600}
 # residuo, suba de volta. So mexemos no [bed_mesh] (o z_tilt mexe na gantry, onde
 # a variacao pode ser maior - fica no valor de fabrica).
 HMZ_ALVOS = {"bed_mesh": 3}
+# retry_tolerance do [z_tilt]: BAIXA ate o alvo. De fabrica e 0.1mm e aceita um
+# probe anomalo (dia 02/11: step_bst_indx=14 / bst_zoft=0.095 no ponto X=5 deu
+# range 0.0775 e inclinou o gantry ~0.09mm so naquela impressao, 'Retries: 0/10').
+# O ruido normal medido hoje fica em 0.007-0.0225; 0.03 repete so o que e falha e
+# nao repete a toa (cada retry custa ~15 s).
+RT_ALVOS = {"z_tilt": 0.03}
 
 
 def main() -> int:
@@ -37,11 +43,13 @@ def main() -> int:
     sec = None
     ja_speed = set()
     ja_hmz = set()
+    ja_rt = set()
     saida = []
     mudou = False
     sec_re = re.compile(r"^\[([a-zA-Z0-9_]+)")
     spd_re = re.compile(r"^(\s*speed\s*:\s*)([0-9.]+)(.*)$")
     hmz_re = re.compile(r"^(\s*horizontal_move_z\s*:\s*)([0-9.]+)(.*)$")
+    rt_re = re.compile(r"^(\s*retry_tolerance\s*:\s*)([0-9.]+)(.*)$")
     for ln in linhas:
         m = sec_re.match(ln)
         if m:
@@ -72,10 +80,23 @@ def main() -> int:
                     ln = "%s%s%s" % (hm.group(1), alvo, hm.group(3))
                     mudou = True
                 ja_hmz.add(sec)
+        # retry_tolerance: BAIXA ate o alvo (so a 1a de cada secao)
+        if sec in RT_ALVOS and sec not in ja_rt:
+            rm = rt_re.match(ln)
+            if rm:
+                alvo = RT_ALVOS[sec]
+                try:
+                    atual = float(rm.group(2))
+                except ValueError:
+                    atual = None
+                if atual is not None and atual > alvo:
+                    ln = "%s%s%s" % (rm.group(1), alvo, rm.group(3))
+                    mudou = True
+                ja_rt.add(sec)
         saida.append(ln)
 
     if not mudou:
-        print("I: bed_mesh/z_tilt ja estao no alvo (speed + horizontal_move_z) - nada a fazer")
+        print("I: bed_mesh/z_tilt ja estao no alvo (speed + horizontal_move_z + retry_tolerance) - nada a fazer")
         return 0
 
     # sanity: nao pode ter mudado a estrutura (so o valor de umas linhas)
@@ -90,7 +111,8 @@ def main() -> int:
     with open(cfg, "w", encoding="utf-8", errors="surrogateescape") as fh:
         fh.write("\n".join(saida))
     print("I: bed_mesh/z_tilt speed -> 600 e bed_mesh horizontal_move_z -> 3 "
-          "(viagem mais rapida + mesa desce menos entre os pontos)")
+          "(viagem mais rapida + mesa desce menos entre os pontos) e z_tilt "
+          "retry_tolerance -> %s (repete leitura anomala do probe)" % RT_ALVOS["z_tilt"])
     return 10  # 10 = mudou (o install.sh reinicia o Klipper so nesse caso)
 
 
