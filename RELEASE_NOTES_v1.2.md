@@ -15,6 +15,3 @@ Primeira versão deste fork validada no **firmware 1.1.7.0** (K2 Plus, 2 CFS, DX
 ## Mudanças
 - Clone na impressora agora é `/mnt/UDISK/k2-improvements`; o nome antigo do projeto saiu do código e da documentação.
 - README reescrito para este fork (o do upstream erondiel foi para `docs/README-UPSTREAM-ERONDIEL.md`).
-
-## Migração da impressora (uma vez)
-Mover a pasta e re-apontar os links antes do primeiro `k2 update` — ver o PR de origem.
