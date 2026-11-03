@@ -15,7 +15,7 @@
 
 set -e
 
-REPO="${2:-opoeta/k2-improvements}"
+REPO="${2:-opoeta/k2-improvements-joelma}"
 MODO="${1:-verificar}"
 VERFILE=/mnt/UDISK/.k2-version
 

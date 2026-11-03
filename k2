@@ -1,19 +1,19 @@
 #!/bin/sh
 # ============================================================
-# joelma - gerenciador do k2-improvements-joelma (K2 Plus)
-# Instalado em /usr/bin/joelma pelo bootstrap.
+# k2 - gerenciador do k2-improvements-joelma (K2 Plus)
+# Instalado em /usr/bin/k2 pelo bootstrap.
 #
 # Comandos:
-#   joelma update     - atualiza se houver versao nova no GitHub
-#   joelma status     - mostra versao instalada vs GitHub
-#   joelma verificar  - roda a pre-verificacao (nao muda nada)
-#   joelma install    - forca reinstalacao completa
+#   k2 update     - atualiza se houver versao nova no GitHub
+#   k2 status     - mostra versao instalada vs GitHub
+#   k2 verificar  - roda a pre-verificacao (nao muda nada)
+#   k2 install    - forca reinstalacao completa
 # ============================================================
 
 REPO="opoeta/k2-improvements-joelma"
 DEST=/mnt/UDISK/k2-improvements-joelma
-VERFILE=/mnt/UDISK/.joelma-version
-RAW_BOOT="https://raw.githubusercontent.com/${REPO}/main/bootstrap-joelma.sh"
+VERFILE=/mnt/UDISK/.k2-version
+RAW_BOOT="https://raw.githubusercontent.com/${REPO}/main/bootstrap-k2.sh"
 
 sha_remoto() {
     python3 -c "import json,ssl,urllib.request;ctx=ssl._create_unverified_context();print(json.load(urllib.request.urlopen('https://api.github.com/repos/${REPO}/commits/main',context=ctx,timeout=30))['sha'][:12])" 2>/dev/null || true
@@ -29,15 +29,15 @@ case "${1:-status}" in
     LOCAL=$(cat $VERFILE 2>/dev/null)
     if [ -n "$REMOTO" ] && [ "$REMOTO" = "$LOCAL" ]; then
         echo "Ja esta na versao mais recente (${LOCAL})."
-        echo "Para forcar reinstalacao: joelma install"
+        echo "Para forcar reinstalacao: k2 install"
         exit 0
     fi
     echo "==> Atualizando: ${LOCAL:-nenhuma} -> ${REMOTO:-desconhecida}"
-    if baixa_bootstrap /tmp/joelma-up.sh; then
-        sh /tmp/joelma-up.sh install
+    if baixa_bootstrap /tmp/k2-up.sh; then
+        sh /tmp/k2-up.sh install "$REPO"
     else
         echo "W: nao consegui baixar o bootstrap novo; usando o local"
-        sh $DEST/bootstrap-joelma.sh install
+        sh $DEST/bootstrap-k2.sh install "$REPO"
     fi
     ;;
   status)
@@ -48,21 +48,21 @@ case "${1:-status}" in
     if [ -n "$REMOTO" ] && [ "$LOCAL" = "$REMOTO" ]; then
         echo "-> Atualizado."
     else
-        echo "-> Update disponivel: rode 'joelma update'"
+        echo "-> Update disponivel: rode 'k2 update'"
     fi
     ;;
   verificar)
-    sh $DEST/verifica-joelma.sh
+    sh $DEST/verifica-k2.sh
     ;;
   install)
-    if baixa_bootstrap /tmp/joelma-up.sh; then
-        sh /tmp/joelma-up.sh install
+    if baixa_bootstrap /tmp/k2-up.sh; then
+        sh /tmp/k2-up.sh install "$REPO"
     else
-        sh $DEST/bootstrap-joelma.sh install
+        sh $DEST/bootstrap-k2.sh install "$REPO"
     fi
     ;;
   *)
-    echo "uso: joelma [update|status|verificar|install]"
+    echo "uso: k2 [update|status|verificar|install]"
     exit 1
     ;;
 esac
