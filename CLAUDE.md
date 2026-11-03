@@ -133,9 +133,8 @@ pesquisa do CFS no OrcaSlicer, receitas de curl. **Leia sob demanda.**
 - **Mesh x PR Touch (nov/2026, fw 1.1.7.0):** o mesh 5×5 sai um parabolóide que exagera a
   curvatura 3–6× (canto −0,6 mm medido; mesa real ≈ 0,1–0,25) → bordas esmagadas e "Z-offset
   que varia". `BED_MESH_SCALE FACTOR=x` (`features/mesh_scale`) existe e o `START_PRINT` o
-  chama se `mesh_scale < 1` estiver no `k2_vars.cfg` (**desligado**). **Falta validar o fator
-  (~0,30) com o teste de 9 quadrados** (`teste_9_mesh_x030.gcode`, fotos frente→fundo) e então
-  gravar `mesh_scale` via `SAVE_VARIABLE`. Números e hipóteses: `docs/FIRMWARE-1.1.7.0.md` §4.
+  chama se `mesh_scale < 1` estiver no `k2_vars.cfg` (desligado por padrão). **Validado com 0,30 no teste de 9 quadrados (nov/2026) e já gravado** (`mesh_scale = 0.3` no
+  `k2_vars.cfg`; o resíduo frente/fundo ≈ 0,03–0,05 mm fica). Números e hipóteses: `docs/FIRMWARE-1.1.7.0.md` §4.
 
 - **Validar ao vivo no 1º `k2 update`:** (a) `box_guard` segura o RELER RFID — o console
   da Central deve logar `BOX_SET_PRE_LOADING ignorado: ADDR/NUM vazios` e o Klipper seguir
