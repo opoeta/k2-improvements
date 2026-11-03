@@ -8,7 +8,7 @@
   IP `10.10.1.240`, SSH `root` (senha de fábrica da K2 ou chave; **não** gravar senha no git).
 - Objetivo do usuário: "melhor que uma Bambu". Regra dele: **tudo ligável/desligável pelo painel, com o estado
   visível, simples de operar**. Deploys em **PowerShell** (`ssh root@IP "tr -d '\r' | ash"`).
-- Repo no GitHub: `opoeta/k2-improvements-joelma` (URL raw ainda usa esse nome). Branch de trabalho
+- Repo no GitHub: `opoeta/k2-improvements`. Branch de trabalho
   `claude/reler-rfid-button-safety-dig21s`, **PR #68 (rascunho)**, head `92a5d5a`. **Nunca marcar ready nem
   fazer merge sem OK explícito.**
 - Quer um **fork unificado** das descobertas de outros repos: lista em `docs/REFERENCIAS-EXTERNAS.md`.

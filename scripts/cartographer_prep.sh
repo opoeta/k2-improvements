@@ -19,7 +19,7 @@
 # klippy-env=/usr/share/klippy-env, /opt vazio, numpy 1.20.1 presente,
 # git/curl/unzip ausentes, sem CONFIG_USB_ACM (precisa do usb_bridge).
 #
-# Uso:  ssh root@10.10.1.240 "sh /mnt/UDISK/k2-improvements-joelma/scripts/cartographer_prep.sh"
+# Uso:  ssh root@10.10.1.240 "sh /mnt/UDISK/k2-improvements/scripts/cartographer_prep.sh"
 # ============================================================
 
 set -e

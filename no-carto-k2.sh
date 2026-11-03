@@ -1,9 +1,9 @@
 #!/bin/ash
 # ============================================================
 # Instalador k2-improvements SEM Cartographer - K2 Plus (K2 Plus)
-# v2 - ADAPTADO PARA FIRMWARE 1.1.6.x
+# v3 - FIRMWARE 1.1.6.x / 1.1.7.x (validado no 1.1.7.0)
 #
-# No 1.1.6.x a Creality ja embute Moonraker (7125) e Fluidd
+# No 1.1.6.x e 1.1.7.x a Creality ja embute Moonraker (7125) e Fluidd
 # (4408) de fabrica. Por isso esta versao NAO instala:
 #   entware, better-root, better-init, moonraker, fluidd
 # (redundantes ou conflitantes com os servicos stock).
@@ -29,7 +29,7 @@ done
 echo "    OK - BOX_* e z_tilt presentes"
 
 # ---------- 1. Symlinks de compatibilidade ----------
-# No 1.1.6.x /root vem vazio; os install.sh esperam ~/printer_data
+# No 1.1.6.x/1.1.7.x /root vem vazio; os install.sh esperam ~/printer_data
 # e ~/klipper (layout que o better-root criava nos firmwares antigos).
 echo "==> Criando symlinks de compatibilidade em /root..."
 [ -e /root/printer_data ] || ln -s /mnt/UDISK/printer_data /root/printer_data
@@ -90,7 +90,7 @@ run_step kamp               features/kamp-adaptive-purge/install.sh
 
 echo ""
 echo "============================================"
-echo " Instalacao concluida! (firmware 1.1.6.x)"
+echo " Instalacao concluida! (firmware 1.1.6.x / 1.1.7.x)"
 echo " Fluidd stock: http://$(ip route get 1 2>/dev/null | awk '{print $7; exit}'):4408"
 echo ""
 echo " Instalado: SCREWS_TILT_CALCULATE, START_PRINT,"

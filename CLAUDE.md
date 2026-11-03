@@ -16,9 +16,9 @@ web completa, integração CFS ↔ Spoolman.
 
 ## Onde as coisas estão
 
-- **K2 Plus** (K2 Plus): `10.10.1.240` — firmware Creality **1.1.6.1**, placa `CR0CN240110C10`
+- **K2 Plus** (K2 Plus): `10.10.1.240` — firmware Creality **1.1.7.0** (ver `docs/FIRMWARE-1.1.7.0.md`), placa `CR0CN240110C10`
   - Fluidd **:4408** · Moonraker **:7125** · API stock Creality **:80** e WebSocket **:9999**
-  - Clone do repo na impressora: `/mnt/UDISK/k2-improvements-joelma`
+  - Clone do repo na impressora: `/mnt/UDISK/k2-improvements`
   - Moonraker conf: `/usr/share/moonraker/moonraker.conf`
   - Componentes do Moonraker: `/usr/share/moonraker/components/`
 - **NAS Asustor**: `10.10.1.254` — Docker rodando **Spoolman 0.23.1** em `:7912`
@@ -33,9 +33,14 @@ web completa, integração CFS ↔ Spoolman.
 ## Deploy (sempre este fluxo)
 
 ```powershell
-git add -A; git commit -m "..."; git push
-python $env:USERPROFILE\_update_k2.py    # roda `k2 update` via SSH (~2 min)
+git add -A; git commit -m "..."; git push   # + PR e merge no main
+ssh root@10.10.1.240 "k2 update"           # reinstala tudo (~2-3 min, impressora parada)
 ```
+
+O `k2 update` só enxerga o **main** do GitHub (compara `/mnt/UDISK/.k2-version` com o sha do
+main). Código só em branch/PR **não chega** — e um `git clean` do update apaga o que foi copiado
+na mão. Se o Klipper cair com `Unable to open config file …/custom/<x>.cfg`, a pasta
+`/mnt/UDISK/k2-improvements` perdeu uma feature: reinstale ou tire o `[include]` quebrado.
 
 As features rodam como `sh ${SCRIPT_DIR}/features/<nome>/install.sh`. Dentro do `install.sh`,
 use `FEAT_DIR=$(dirname "$0")` pra achar arquivos irmãos. Blocos de config no `moonraker.conf`
@@ -54,7 +59,7 @@ devem ser **idempotentes** (`grep -q` antes de acrescentar).
    Moonraker mostra `spoolman_connected: false`. Comando pra subir em `CLAUDE.local.md`.
 3. Containers `prometheus` e `PufferPanel` ficam em restart loop no NAS — fora de escopo.
 4. **KAMP com `PROBE_COUNT` menor que o do config derrubava o Klipper.** O probe da K2 é
-   blob compilado (`prtouch_v3_wrapper`, fw 1.1.6.1) e assume SEMPRE a grade do
+   blob compilado (`prtouch_v3_wrapper`, fw 1.1.6.1 e 1.1.7.0) e assume SEMPRE a grade do
    `[bed_mesh]` (5×5 = 25 pontos). O `BED_MESH_CALIBRATE` do KAMP adaptava pra 3×3 →
    `IndexError` na linha 1925 → `key60` + shutdown no meio do `START_PRINT ADAPTIVE=1`.
    **→ CORRIGIDO (jul/2026):** `Adaptive_Meshing.cfg` agora é **vendorado** em
@@ -124,6 +129,13 @@ curl http://10.10.1.240:7125/server/spoolman_admin/scan       # achar Spoolman n
 pesquisa do CFS no OrcaSlicer, receitas de curl. **Leia sob demanda.**
 
 ## Pendências (nada de código bloqueado — tudo está no ar)
+
+- **Mesh x PR Touch (nov/2026, fw 1.1.7.0):** o mesh 5×5 sai um parabolóide que exagera a
+  curvatura 3–6× (canto −0,6 mm medido; mesa real ≈ 0,1–0,25) → bordas esmagadas e "Z-offset
+  que varia". `BED_MESH_SCALE FACTOR=x` (`features/mesh_scale`) existe e o `START_PRINT` o
+  chama se `mesh_scale < 1` estiver no `k2_vars.cfg` (**desligado**). **Falta validar o fator
+  (~0,30) com o teste de 9 quadrados** (`teste_9_mesh_x030.gcode`, fotos frente→fundo) e então
+  gravar `mesh_scale` via `SAVE_VARIABLE`. Números e hipóteses: `docs/FIRMWARE-1.1.7.0.md` §4.
 
 - **Validar ao vivo no 1º `k2 update`:** (a) `box_guard` segura o RELER RFID — o console
   da Central deve logar `BOX_SET_PRE_LOADING ignorado: ADDR/NUM vazios` e o Klipper seguir
@@ -247,7 +259,7 @@ regras para operar a impressora por SSH: [`docs/HANDOFF-SESSAO-2026-10.md`](docs
   DXC2 = extrusor **dual-drive** (Phaetus/D3vil) com guilhotina, 1 bico, multicolor via
   troca, trabalha junto com a CFS. Beacon = sonda eddy-current (substitui o probe de
   célula de carga; precisa do binário USB-bridge armv7l). Pinado no firmware 1.1.6.1
-  (conferir compat com 1.1.7.0 na hora). Os comandos/macros ficam em `config/macros/*.cfg`
+  (1.1.7.0 em uso; Beacon não testado aqui). Os comandos/macros ficam em `config/macros/*.cfg`
   e `docs/DXC2-CFS.md`/`docs/BEACON.md` — **ler esses arquivos** para extrair os nomes
   reais antes de ligar botão. Calibração exige **medição física** (offset X/Y do Beacon,
   bico↔probe, alinhamento da guilhotina) e pode causar colisão → toda ferramenta web
