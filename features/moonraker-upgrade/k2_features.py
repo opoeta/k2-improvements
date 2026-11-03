@@ -126,7 +126,7 @@ def _include(name: str, add: bool) -> None:
 class K2Features:
     def __init__(self, config: "ConfigHelper") -> None:
         self.server = config.get_server()
-        self.repo = config.get("repo", "/mnt/UDISK/k2-improvements-joelma")
+        self.repo = config.get("repo", "/mnt/UDISK/k2-improvements")
         self.server.register_endpoint(
             "/server/k2/features",
             RequestType.GET | RequestType.POST,

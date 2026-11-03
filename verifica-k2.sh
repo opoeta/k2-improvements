@@ -10,9 +10,10 @@ echo " Pre-verificacao k2-improvements (K2 Plus)"
 echo "=========================================="
 
 # ---------- 1. Firmware ----------
-FW=""
+# fw_printenv (U-Boot env) e a fonte mais confiavel: 'version=1.1.7.0'
+FW=$(fw_printenv version 2>/dev/null | sed -n 's/^version=//p' | head -1)
 LOG="/mnt/UDISK/creality/userdata/log/upgrade-server.log"
-if [ -r "$LOG" ]; then
+if [ -z "$FW" ] && [ -r "$LOG" ]; then
     FW=$(grep -oE 'sys = [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' "$LOG" | tail -1 | awk '{print $3}')
 fi
 if [ -z "$FW" ]; then
@@ -22,13 +23,14 @@ fi
 echo ""
 echo "[1] Firmware detectado: ${FW:-DESCONHECIDO}"
 case "$FW" in
+    1.1.7.*)  echo "    OK - rota da K2 Plus (no-carto-k2.sh), validada no 1.1.7.0 (ver docs/FIRMWARE-1.1.7.0.md)" ;;
     1.1.6.*)  echo "    OK - rota da K2 Plus (no-carto-k2.sh, adaptado ao 1.1.6.x)" ;;
     1.1.5.2)  echo "    OK - rota principal deste fork (testada)" ;;
     1.1.3.13) echo "    OK - suportado (rota do upstream Jacob10383)" ;;
     1.1.2.*)  echo "    ATENCAO - firmware 1.1.2.x tem bugs conhecidos (homing invertido)."
               echo "    Recomendado atualizar para 1.1.3.13 ou 1.1.5.2 ANTES de instalar." ;;
     "")       echo "    Nao foi possivel detectar - verifique na tela: Configuracoes > Sobre" ;;
-    *)        echo "    ATENCAO - versao mais nova que 1.1.5.2 (ultima testada pelo repo)."
+    *)        echo "    ATENCAO - firmware nao testada pelo repo (testadas: 1.1.5.2, 1.1.6.x, 1.1.7.x)."
               echo "    A Creality pode ter mudado paths ou o Klipper embarcado."
               echo "    NAO instale ainda - mande esta saida completa pro Claude"
               echo "    para conferir a compatibilidade primeiro." ;;

@@ -1,5 +1,5 @@
 import os
-raiz = os.path.expanduser(r"~\k2-improvements-joelma")
+raiz = os.path.dirname(os.path.abspath(__file__))
 
 # 1) modulo python: traducao
 p = os.path.join(raiz, "features", "screws_tilt_adjust", "screws_tilt_adjust.py")

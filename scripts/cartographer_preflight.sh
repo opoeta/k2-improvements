@@ -7,7 +7,7 @@
 # (que faz rm -rf /opt) ou aplicar patches no Klipper (rebaseados p/ 1.1.5.2).
 #
 # Uso na impressora:
-#   ssh root@10.10.1.240 "sh /mnt/UDISK/k2-improvements-joelma/scripts/cartographer_preflight.sh"
+#   ssh root@10.10.1.240 "sh /mnt/UDISK/k2-improvements/scripts/cartographer_preflight.sh"
 # ou, apos k2 update, o arquivo estara no clone do repo.
 #
 # Mande a saida completa pro Claude — com ela eu monto os passos exatos.

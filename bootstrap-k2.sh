@@ -15,12 +15,12 @@
 
 set -e
 
-REPO="${2:-opoeta/k2-improvements-joelma}"
+REPO="${2:-opoeta/k2-improvements}"
 MODO="${1:-verificar}"
 VERFILE=/mnt/UDISK/.k2-version
 
 URL="https://github.com/${REPO}/archive/refs/heads/main.tar.gz"
-DEST=/mnt/UDISK/k2-improvements-joelma
+DEST=/mnt/UDISK/k2-improvements
 TGZ=/mnt/UDISK/k2imp-k2.tar.gz
 
 echo "==> Baixando ${URL}"

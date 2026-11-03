@@ -28,7 +28,7 @@ Credenciais SSH: `CLAUDE.local.md` (não versionado).
 |---|---|---|
 | **K2 Plus** (K2 Plus) | `10.10.1.240` | Impressora. Firmware Creality **1.1.6.1**, placa `CR0CN240110C10` |
 | **NAS Asustor** | `10.10.1.254` | Docker: Spoolman, Obico, RomM, Portainer, AdGuard, zoukei_sync |
-| **PC (Windows)** | — | Repo em `C:\Users\opoet\k2-improvements-joelma` |
+| **PC (Windows)** | — | Repo clonado no PC (pasta `k2-improvements`) |
 
 Na K2 Plus roda o Moonraker **upstream** (fork DnG-Crafts/K2-Camera), API 1.4.0 — substitui o
 build cortado da Creality. Na `:4408`, **Fluidd upstream (última release de fluidd-core/fluidd)**

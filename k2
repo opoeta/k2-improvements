@@ -1,6 +1,6 @@
 #!/bin/sh
 # ============================================================
-# k2 - gerenciador do k2-improvements-joelma (K2 Plus)
+# k2 - gerenciador do k2-improvements (K2 Plus)
 # Instalado em /usr/bin/k2 pelo bootstrap.
 #
 # Comandos:
@@ -10,8 +10,8 @@
 #   k2 install    - forca reinstalacao completa
 # ============================================================
 
-REPO="opoeta/k2-improvements-joelma"
-DEST=/mnt/UDISK/k2-improvements-joelma
+REPO="opoeta/k2-improvements"
+DEST=/mnt/UDISK/k2-improvements
 VERFILE=/mnt/UDISK/.k2-version
 RAW_BOOT="https://raw.githubusercontent.com/${REPO}/main/bootstrap-k2.sh"
 
